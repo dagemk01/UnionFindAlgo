@@ -21,16 +21,17 @@ public class Percolation {
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
+        validate(n);
         grid = new State[n][n];
         this.n = n;
         size = n * n;
         open = 0;
-        top_Virtual = size+1;
-        bot_Virtual = size+2;
+        top_Virtual = size;
+        bot_Virtual = size+1;
         driver = new WeightedQuickUnionUF(size + 2);
 
-        for (int i = 1; i <= this.n; i++) {
-            for (int j = 1; j <= this.n; j++) {
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
                 grid[i][j] = State.CLOSED;
             }
         }
@@ -38,14 +39,18 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
+        //transform the row and col
+        row--;
+        col--;
+
         if (validate(row, col)) {
             grid[row][col] = State.OPEN;
 
-            int index = (int) Math.pow(size, row) + col;
+            int index = getIndex( row, col);
             
             //Do two edge cases where if its at the top of the grid we connect to the top Virual point
             //Do the same for bottom virtual point for if the row is at the bottom. Easier percelation run   time.
-            if (row == 1){
+            if (row == 0){
                 driver.union(index, top_Virtual);
             }
 
@@ -62,7 +67,7 @@ public class Percolation {
                 open++;
                 // check the boounds of the row
                 if (row - 1 >= 0) {
-                    currIndex = (int) Math.pow(size, row - 1) + col;
+                    currIndex = getIndex(row-1, col);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[row - 1][col] == State.OPEN) {
@@ -70,7 +75,7 @@ public class Percolation {
                     }
                 }
                 if (row + 1 < this.n) {
-                    currIndex = (int) Math.pow(size, row + 1) + col;
+                    currIndex = getIndex(row+1, col);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[row + 1][col] == State.OPEN) {
@@ -80,7 +85,7 @@ public class Percolation {
 
                 // check the bounds of the col
                 if (col - 1 >= 0) {
-                    currIndex = (int) Math.pow(size, row) + (col - 1);
+                    currIndex = getIndex(row, col-1);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[row][col - 1] == State.OPEN) {
@@ -88,7 +93,7 @@ public class Percolation {
                     }
                 }
                 if (col + 1 < this.n) {
-                    currIndex = (int) Math.pow(size, row) + (col + 1);
+                    currIndex = getIndex(row, col+1);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[row][col + 1] == State.OPEN) {
@@ -101,6 +106,10 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
+        //transform the row and col
+        row--;
+        col--;
+
         if (validate(row, col)) {
             if (grid[row][col] == State.OPEN) {
                 return true;
@@ -111,7 +120,16 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        return true;
+        //transform the row and col
+        row--;
+        col--;
+
+        validate(row, col);
+        int index = getIndex(row, col);
+        if (driver.find(index) == driver.find(top_Virtual)){
+            return true;
+        }
+        return false;
     }
 
     // returns the number of open sites
@@ -121,11 +139,17 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return true;
+        if(driver.find(top_Virtual)==driver.find(bot_Virtual)){
+            return true;
+        }
+        return false;
     }
 
     // bounds check
     private boolean validate(int row, int col) {
+        //transform the row and col
+        row--;
+        col--;
         if (row > 0 && row <= this.n) {
             if (col > 0 && col <= this.n) {
                 return true;
@@ -141,8 +165,17 @@ public class Percolation {
         }
         throw new IllegalArgumentException("Cannot be initialized to " + n);
     }
-
+    private int getIndex( int row, int col){
+  
+        int index = (int) Math.pow(size, row) + col;
+        
+        return index;
+    }
     public static void main(String[] args) {
-        System.out.println("hello");
+        int row = 0;
+        int col = 0;
+        Percolation test = new Percolation(3);
+        System.out.println(test.isOpen( row, col));
+        
     }
 }
