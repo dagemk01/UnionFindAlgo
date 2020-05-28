@@ -15,6 +15,8 @@ public class Percolation {
     int size;
     int open;
     int n;
+    int top_Virtual;
+    int bot_Virtual;
     WeightedQuickUnionUF driver;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -23,7 +25,9 @@ public class Percolation {
         this.n = n;
         size = n * n;
         open = 0;
-        driver = new WeightedQuickUnionUF(size);
+        top_Virtual = size+1;
+        bot_Virtual = size+2;
+        driver = new WeightedQuickUnionUF(size + 2);
 
         for (int i = 1; i <= this.n; i++) {
             for (int j = 1; j <= this.n; j++) {
@@ -38,7 +42,16 @@ public class Percolation {
             grid[row][col] = State.OPEN;
 
             int index = (int) Math.pow(size, row) + col;
+            
+            //Do two edge cases where if its at the top of the grid we connect to the top Virual point
+            //Do the same for bottom virtual point for if the row is at the bottom. Easier percelation run   time.
+            if (row == 1){
+                driver.union(index, top_Virtual);
+            }
 
+            if(row == size){
+                driver.union(index, bot_Virtual);
+            }
             int currIndex;
             // checking if the current index is not open
             // if its not open then we will open it and cinnect it with other squares in the
@@ -119,11 +132,11 @@ public class Percolation {
             }
         }
         throw new IllegalArgumentException("index " + row + " or index " + col + " is not between 1 and " + (this.n));
-        ;
+        
     }
 
     private boolean validate(int n) {
-        if (n > 0) {
+        if (n  > 0) {
             return true;
         }
         throw new IllegalArgumentException("Cannot be initialized to " + n);
