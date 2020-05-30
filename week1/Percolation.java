@@ -26,9 +26,9 @@ public class Percolation {
         this.n = n;
         size = n * n;
         open = 0;
-        top_Virtual = size;
-        bot_Virtual = size+1;
-        driver = new WeightedQuickUnionUF(size + 2);
+        top_Virtual = 0;
+        bot_Virtual = size;
+        driver = new WeightedQuickUnionUF(size + 1);
 
         for (int i = 0; i < this.n; i++) {
             for (int j = 0; j < this.n; j++) {
@@ -44,7 +44,15 @@ public class Percolation {
         col--;
 
         if (validate(row, col)) {
-            grid[row][col] = State.OPEN;
+            // checking if the current index is not open
+            // if its not open then we will open it and cinnect it with other squares in the
+            // area.
+            // if its open we do nothing
+            if (grid[col][row] == State.CLOSED) {
+            int currIndex;
+            grid[col][row] = State.OPEN;
+            open++;
+            //grid[col][row] = State.OPEN;
 
             int index = getIndex( row, col);
             
@@ -54,23 +62,19 @@ public class Percolation {
                 driver.union(index, top_Virtual);
             }
 
-            if(row == size){
+            if(row == this.n-1){
                 driver.union(index, bot_Virtual);
             }
-            int currIndex;
-            // checking if the current index is not open
-            // if its not open then we will open it and cinnect it with other squares in the
-            // area.
-            // if its open we do nothing
-            if (!this.isOpen(row, col)) {
-                grid[row][col] = State.OPEN;
-                open++;
+            
+           
+            
+                
                 // check the boounds of the row
                 if (row - 1 >= 0) {
                     currIndex = getIndex(row-1, col);
 
                     // check to see if we need to union any of the surrounding cells
-                    if (grid[row - 1][col] == State.OPEN) {
+                    if (grid[col][row - 1] == State.OPEN) {
                         driver.union(index, currIndex);
                     }
                 }
@@ -78,7 +82,7 @@ public class Percolation {
                     currIndex = getIndex(row+1, col);
 
                     // check to see if we need to union any of the surrounding cells
-                    if (grid[row + 1][col] == State.OPEN) {
+                    if (grid[col][row + 1] == State.OPEN) {
                         driver.union(index, currIndex);
                     }
                 }
@@ -88,7 +92,7 @@ public class Percolation {
                     currIndex = getIndex(row, col-1);
 
                     // check to see if we need to union any of the surrounding cells
-                    if (grid[row][col - 1] == State.OPEN) {
+                    if (grid[col - 1][row] == State.OPEN) {
                         driver.union(index, currIndex);
                     }
                 }
@@ -96,7 +100,7 @@ public class Percolation {
                     currIndex = getIndex(row, col+1);
 
                     // check to see if we need to union any of the surrounding cells
-                    if (grid[row][col + 1] == State.OPEN) {
+                    if (grid[col + 1][row] == State.OPEN) {
                         driver.union(index, currIndex);
                     }
                 }
@@ -111,7 +115,7 @@ public class Percolation {
         col--;
 
         if (validate(row, col)) {
-            if (grid[row][col] == State.OPEN) {
+            if (grid[col][row] == State.OPEN) {
                 return true;
             }
         }
@@ -148,10 +152,9 @@ public class Percolation {
     // bounds check
     private boolean validate(int row, int col) {
         //transform the row and col
-        row--;
-        col--;
-        if (row > 0 && row <= this.n) {
-            if (col > 0 && col <= this.n) {
+        
+        if (row >= 0 && row < this.n) {
+            if (col >= 0 && col < this.n) {
                 return true;
             }
         }
@@ -166,16 +169,33 @@ public class Percolation {
         throw new IllegalArgumentException("Cannot be initialized to " + n);
     }
     private int getIndex( int row, int col){
-  
-        int index = (int) Math.pow(size, row) + col;
+        int index = (n*row) + col;
+        //System.out.println(index); 
         
         return index;
     }
+    
     public static void main(String[] args) {
-        int row = 0;
-        int col = 0;
+        int row = 1;
+        int col = 1;
         Percolation test = new Percolation(3);
         System.out.println(test.isOpen( row, col));
+        test.open(1,1);
+        test.open(2,1);
+        test.open(2,3);
+
+        System.out.println(test.isFull(1, 1));
+        System.out.println(test.isFull(2, 1));
+        System.out.println(test.isFull(2, 3));
         
+        System.out.println(test.isOpen(1, 1));
+        System.out.println(test.isOpen(2, 2));
+        System.out.println(test.isOpen(2, 3));
+        System.out.println(test.isOpen(2, 1));
+
+        System.out.println(test.percolates());
+        test.open(3,1);
+        System.out.println(test.percolates());
+
     }
 }
