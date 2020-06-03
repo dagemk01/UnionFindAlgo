@@ -4,8 +4,8 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
     // Instance Variables
-    double[] data;
-    int trials;
+    private double[] data;
+    private int trials;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials){

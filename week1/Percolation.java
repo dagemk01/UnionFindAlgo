@@ -3,18 +3,18 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    enum State {
+    private enum State {
         OPEN, CLOSED
     }
 
     // instance variables
-    State[][] grid;
-    int size;
-    int open;
-    int n;
-    int top_Virtual;
-    int bot_Virtual;
-    WeightedQuickUnionUF driver;
+    private State[][] grid;
+    private int size;
+    private int open;
+    private int n;
+    private int top_Virtual;
+    private int bot_Virtual;
+    private WeightedQuickUnionUF driver;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
