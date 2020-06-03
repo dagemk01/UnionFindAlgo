@@ -126,7 +126,7 @@ public class Percolation {
 
         validate(row, col);
         int index = getIndex(row, col);
-        if (driver.find(index) == driver.find(top_Virtual)) {
+        if (isOpen(row, col) && driver.find(index) == driver.find(top_Virtual)) {
             return true;
         }
         return false;
