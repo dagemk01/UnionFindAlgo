@@ -9,12 +9,12 @@ public class Percolation {
 
     // instance variables
     private State[][] grid;
-    private int size;
+    private final int size;
     private int open;
-    private int n;
-    private int top_Virtual;
-    private int bot_Virtual;
-    private WeightedQuickUnionUF driver;
+    private final int n;
+    private final int top_Virtual;
+    private final int bot_Virtual;
+    private final WeightedQuickUnionUF driver;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {

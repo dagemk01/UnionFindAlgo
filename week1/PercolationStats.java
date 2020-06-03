@@ -16,21 +16,19 @@ public class PercolationStats {
             for (int i = 0; i < trials; i ++){
                 //Current instace of the percolation object
                 Percolation inst = new Percolation(n);
-                int count = 0;
+                //int count = 0;
                 while (inst.percolates() == false){
                     int row = StdRandom.uniform(1, n+1);
                     int col = StdRandom.uniform(1, n+1);
 
                     inst.open(row, col);
-                    if(count % 10 == 0){
-                    //System.out.println(""+count+": Processing Please Wait openning ("+row+", "+col+")");
-                    }
-                    count ++;
+                    
+                    //count ++;
                 }
-                System.out.println("finmished: "+ i);
+                //System.out.println("finmished: "+ i);
                 double total = n*n;
                 data[i] = inst.numberOfOpenSites()/total;
-                System.out.println(inst.numberOfOpenSites()/(total));
+                //System.out.println(inst.numberOfOpenSites()/(total));
 
             }
         }
