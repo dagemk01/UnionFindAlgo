@@ -1,8 +1,5 @@
 //package week1;
 
-import java.lang.Math;
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -39,7 +36,7 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        //transform the row and col
+        // transform the row and col
         row--;
         col--;
 
@@ -49,29 +46,28 @@ public class Percolation {
             // area.
             // if its open we do nothing
             if (grid[col][row] == State.CLOSED) {
-            int currIndex;
-            grid[col][row] = State.OPEN;
-            open++;
-            //grid[col][row] = State.OPEN;
+                int currIndex;
+                grid[col][row] = State.OPEN;
+                open++;
+                // grid[col][row] = State.OPEN;
 
-            int index = getIndex( row, col);
-            
-            //Do two edge cases where if its at the top of the grid we connect to the top Virual point
-            //Do the same for bottom virtual point for if the row is at the bottom. Easier percelation run   time.
-            if (row == 0){
-                driver.union(index, top_Virtual);
-            }
+                int index = getIndex(row, col);
 
-            if(row == this.n-1){
-                driver.union(index, bot_Virtual);
-            }
-            
-           
-            
-                
+                // Do two edge cases where if its at the top of the grid we connect to the top
+                // Virual point
+                // Do the same for bottom virtual point for if the row is at the bottom. Easier
+                // percelation run time.
+                if (row == 0) {
+                    driver.union(index, top_Virtual);
+                }
+
+                if (row == this.n - 1) {
+                    driver.union(index, bot_Virtual);
+                }
+
                 // check the boounds of the row
                 if (row - 1 >= 0) {
-                    currIndex = getIndex(row-1, col);
+                    currIndex = getIndex(row - 1, col);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[col][row - 1] == State.OPEN) {
@@ -79,7 +75,7 @@ public class Percolation {
                     }
                 }
                 if (row + 1 < this.n) {
-                    currIndex = getIndex(row+1, col);
+                    currIndex = getIndex(row + 1, col);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[col][row + 1] == State.OPEN) {
@@ -89,7 +85,7 @@ public class Percolation {
 
                 // check the bounds of the col
                 if (col - 1 >= 0) {
-                    currIndex = getIndex(row, col-1);
+                    currIndex = getIndex(row, col - 1);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[col - 1][row] == State.OPEN) {
@@ -97,7 +93,7 @@ public class Percolation {
                     }
                 }
                 if (col + 1 < this.n) {
-                    currIndex = getIndex(row, col+1);
+                    currIndex = getIndex(row, col + 1);
 
                     // check to see if we need to union any of the surrounding cells
                     if (grid[col + 1][row] == State.OPEN) {
@@ -110,7 +106,7 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        //transform the row and col
+        // transform the row and col
         row--;
         col--;
 
@@ -124,13 +120,13 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        //transform the row and col
+        // transform the row and col
         row--;
         col--;
 
         validate(row, col);
         int index = getIndex(row, col);
-        if (driver.find(index) == driver.find(top_Virtual)){
+        if (driver.find(index) == driver.find(top_Virtual)) {
             return true;
         }
         return false;
@@ -143,7 +139,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        if(driver.find(top_Virtual)==driver.find(bot_Virtual)){
+        if (driver.find(top_Virtual) == driver.find(bot_Virtual)) {
             return true;
         }
         return false;
@@ -151,50 +147,51 @@ public class Percolation {
 
     // bounds check
     private boolean validate(int row, int col) {
-        //transform the row and col
-        
+        // transform the row and col
+
         if (row >= 0 && row < this.n) {
             if (col >= 0 && col < this.n) {
                 return true;
             }
         }
         throw new IllegalArgumentException("index " + row + " or index " + col + " is not between 1 and " + (this.n));
-        
+
     }
 
     private boolean validate(int n) {
-        if (n  > 0) {
+        if (n > 0) {
             return true;
         }
         throw new IllegalArgumentException("Cannot be initialized to " + n);
     }
-    private int getIndex( int row, int col){
-        int index = (n*row) + col;
-        //System.out.println(index); 
-        
+
+    private int getIndex(int row, int col) {
+        int index = (n * row) + col;
+        // System.out.println(index);
+
         return index;
     }
-    
+
     public static void main(String[] args) {
         int row = 1;
         int col = 1;
-        Percolation test = new Percolation(3);
-        System.out.println(test.isOpen( row, col));
-        test.open(1,1);
-        test.open(2,1);
-        test.open(2,3);
+        Percolation test = new Percolation(25);
+        System.out.println(test.isOpen(row, col));
+        test.open(1, 1);
+        test.open(2, 1);
+        test.open(2, 3);
 
         System.out.println(test.isFull(1, 1));
         System.out.println(test.isFull(2, 1));
         System.out.println(test.isFull(2, 3));
-        
+
         System.out.println(test.isOpen(1, 1));
         System.out.println(test.isOpen(2, 2));
         System.out.println(test.isOpen(2, 3));
         System.out.println(test.isOpen(2, 1));
 
         System.out.println(test.percolates());
-        test.open(3,1);
+        test.open(3, 1);
         System.out.println(test.percolates());
 
     }
