@@ -1,4 +1,6 @@
 import java.util.*;
+
+import edu.princeton.cs.algs4.StdOut;
 public class Deque<Item> implements Iterable<Item> {
     // Instance Variables
     private class node <Item>{
@@ -39,6 +41,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // add the item to the front
     public void addFirst(Item item){
+        
         if (this.isEmpty()){
             head.info = item;
         } else{
@@ -47,6 +50,7 @@ public class Deque<Item> implements Iterable<Item> {
             this.head = head.prev;
             this.head.info = item;
         }
+        size++;
     }
 
     // add the item to the back
@@ -60,6 +64,7 @@ public class Deque<Item> implements Iterable<Item> {
             this.tail = tail.next;
             this.tail.info = item;
         }
+        size++;
     }
 
     // remove and return the item from the front
@@ -67,7 +72,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (this.isEmpty()){
             throw new NoSuchElementException ("Removing an empty Deque!");
         }
-        --this.size;
+        --size;
         if (size == 1){
             return (Item) head.info;
             
@@ -128,7 +133,25 @@ public class Deque<Item> implements Iterable<Item> {
     }
     // unit testing (required)
     public static void main(String[] args){
+        Deque <Integer> test = new Deque();
+        System.out.println(test.isEmpty());
+        
+        for (int i = 0; i < 20; i++){
+            test.addFirst(i);
+        }
 
+        for (int i = 0; i < 20; i++){
+            test.removeFirst();
+        }
+
+        for (int i = 0; i < 20; i++){
+            test.addLast(i);
+        }
+
+        for (int i = 0; i < 20; i++){
+            test.removeLast();
+        }
+        test.removeLast();
     }
 
 }
