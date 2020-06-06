@@ -1,3 +1,4 @@
+import java.util.*;
 public class Deque<Item> implements Iterable<Item> {
     // Instance Variables
     private class node <Item>{
@@ -19,7 +20,7 @@ public class Deque<Item> implements Iterable<Item> {
     // construct an empty deque
     public Deque(){
         size = 0;
-        head = new node<Item>();
+        head = new node();
         tail = head;
     }
 
@@ -49,6 +50,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // add the item to the back
+
     public void addLast(Item item){
         if (this.isEmpty()){
             this.tail.info = item;
@@ -62,19 +64,68 @@ public class Deque<Item> implements Iterable<Item> {
 
     // remove and return the item from the front
     public Item removeFirst(){
-        
+        if (this.isEmpty()){
+            throw new NoSuchElementException ("Removing an empty Deque!");
+        }
+        --this.size;
+        if (size == 1){
+            return (Item) head.info;
+            
+        }
+
+        node temp = head;
+        head = head.next;
+        temp.next = null;
+        head.prev = null;
+
+        return (Item) temp.info;
     }
 
     // remove and return the item from the back
     public Item removeLast(){
+        if (this.isEmpty()){
+            throw new NoSuchElementException ("Removing an empty Deque!");
+        }
+        --size;
+        if (size == 1){
+            return (Item) tail.info;
+        }
+        node temp = tail;
+        tail = tail.prev;
+        temp.prev = null;
+        tail.next = null;
+
+
+        return (Item) temp.info;
 
     }
 
     // return an iterator over items in order from front to back
     public Iterator<Item> iterator(){
-
+        return new DequeIterator();
     }
+    private class DequeIterator implements Iterator<Item>{
 
+        private node current = head;
+        @Override
+        public boolean hasNext() {
+            
+            if (current == null){
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public Item next() {
+            
+            Item item = (Item) current.info;
+            current = current.next;
+            
+            return item;
+        }
+        
+    }
     // unit testing (required)
     public static void main(String[] args){
 
